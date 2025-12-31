@@ -1,0 +1,390 @@
+<DELIVERABLE_HEADER>
+
+EMITTER: SPEC - Deliverable Header
+REQUESTED_BY: USER
+ARTIFACT_DOMAIN: SPECIFICATION
+ARTIFACT_FUNCTION: GRAMMAR
+ARTIFACT_ID: DELIVERABLE_HEADER
+ARTIFACT_FORMAT: PLAIN_TEXT
+ARTIFACT_GROUP: SPECIFICATION; ARTIFACT_METADATA
+CREATED_IN_CONTEXT: GITHUB ERA GOVERNANCE ARTIFACT ALIGNMENT
+
+</DELIVERABLE_HEADER>
+
+
+────────────────────────────────────────
+CONTENT
+────────────────────────────────────────
+
+<DELIVERABLE_HEADER>
+
+EMITTER:
+REQUESTED_BY:
+ARTIFACT_DOMAIN:
+ARTIFACT_FUNCTION:
+ARTIFACT_ID:
+ARTIFACT_FORMAT:
+ARTIFACT_GROUP:
+CREATED_IN_CONTEXT:
+
+[OPTIONAL — REPEATABLE]
+COLLABORATION:
+
+</DELIVERABLE_HEADER>
+
+
+────────────────────────────────────────
+EXPLANATION
+────────────────────────────────────────
+
+Deliverable Header Specification — Canonical Definition
+
+Purpose
+
+This artifact defines the required header structure and fields for
+deliverable artifacts.
+
+The header exists to make provenance, identity, expression, association,
+and situational context explicit, while deliberately refusing to encode
+authority, lifecycle, ordering, evaluation, or temporal semantics.
+
+Human vs Machine Interpretation
+
+Header field values are chosen by human authors and may be meaningful
+and legible to them.
+
+The constraints defined in this specification apply to how tooling,
+automation, and orchestration interpret and act upon these values.
+
+Tooling MUST treat all header values as declarative inputs and MUST NOT
+infer intent, authority, behavior, or lifecycle semantics beyond what is
+explicitly specified by governing artifacts.
+
+
+────────────────────────────────────────
+APPLICABILITY
+────────────────────────────────────────
+
+This specification applies only to artifacts designated as deliverables
+within a delegated execution scope.
+
+It does not replace or override:
+• ledger headers
+• protocol headers
+• governance artifacts
+
+Reuse outside deliverable artifacts requires explicit declaration elsewhere.
+
+
+────────────────────────────────────────
+HEADER STRUCTURE (NORMATIVE)
+────────────────────────────────────────
+
+All deliverable artifacts MUST include an explicit header block delimited by:
+
+<DELIVERABLE_HEADER>
+</DELIVERABLE_HEADER>
+
+All header fields MUST appear within this block.
+
+The deliverable body consists of all content following the closing
+</DELIVERABLE_HEADER> tag.
+
+No other markers are required to establish the header/body boundary.
+
+
+────────────────────────────────────────
+REQUIRED HEADER FIELDS
+────────────────────────────────────────
+
+All deliverable artifacts MUST include all of the following fields.
+
+
+EMITTER
+-------
+
+Identifies the role or chat instance that produced the artifact.
+Encodes authorship and accountability only.
+
+
+REQUESTED_BY
+------------
+
+Identifies the role or actor that requested production of the artifact.
+Encodes request provenance only and does not imply approval or acceptance.
+
+
+ARTIFACT_DOMAIN
+---------------
+
+ARTIFACT_DOMAIN declares the canonical domain in which an artifact
+belongs.
+
+It exists solely to support deterministic artifact routing
+(e.g., repository selection).
+
+ARTIFACT_DOMAIN:
+• does not convey meaning
+• does not imply authority
+
+ARTIFACT_DOMAIN values are opaque labels governed externally.
+
+This field may be referenced by routing rules.
+Omission is permitted only for legacy deliverable artifacts created
+before adoption of this specification; newly created artifacts are
+expected to include this field.
+
+
+ARTIFACT_FUNCTION
+-----------------
+
+ARTIFACT_FUNCTION declares the class of responsibility an artifact
+belongs to for purposes of deterministic placement.
+
+The value is selected by a human author and is used by tooling solely to
+determine the path class (directory or directory tree) under which the
+artifact is placed.
+
+ARTIFACT_FUNCTION:
+• does not identify an artifact
+• does not convey authority
+
+
+ARTIFACT_ID
+-----------
+
+ARTIFACT_ID declares the stable identity of an artifact.
+
+It is a human-chosen identifier selected for clarity and reference.
+Tooling and orchestration MUST treat the value as opaque and MUST NOT
+interpret internal structure, wording, or apparent meaning.
+
+ARTIFACT_ID exists to uniquely identify an artifact independently of its
+role, format, location, or lifecycle.
+
+ARTIFACT_ID:
+• is treated as opaque by machines
+• does not convey authority
+• remains stable across revisions and relocations
+
+ARTIFACT_ID is the sole source of truth for artifact identity.
+
+This field may be referenced by routing or naming rules.
+Omission is permitted only for legacy deliverable artifacts created
+before adoption of this specification; newly created artifacts are
+expected to include this field.
+
+ARTIFACT_FORMAT
+---------------
+
+Declares the primary form in which the artifact is expressed.
+Sets reader and parsing expectations only.
+
+
+ARTIFACT_GROUP
+--------------
+
+Declares one or more associative group labels for discoverability.
+Groups are unordered and many-to-many.
+Grouping does not imply priority, hierarchy, or replacement.
+
+ARTIFACT_GROUP values MUST be separated using a semicolon (`;`) delimiter.
+
+Example:
+ARTIFACT_GROUP: VIDEO_POKER_GUI; UI_OVERLAY; HAND_EVAL
+
+The order of group values is semantically meaningless.
+
+
+CREATED_IN_CONTEXT
+------------------
+
+Declares the situational context under which the artifact was produced.
+Describes circumstances or constraints, not evaluation or outcome.
+Must not encode time, version, order, acceptance, or success.
+
+
+────────────────────────────────────────
+DETERMINISTIC PLACEMENT GRAMMAR
+────────────────────────────────────────
+
+This section defines the only valid deterministic mapping from
+deliverable header fields to artifact placement.
+
+This grammar is normative and declarative.
+
+Any deviation from this mapping is incorrect by definition, regardless
+of tooling availability or enforcement status.
+
+Placement is a pure, total function of the deliverable header.
+Given a valid header, the repository, path, filename, and extension are
+uniquely determined.
+Missing or invalid required fields cause placement to fail; no defaults,
+fallbacks, or judgment are permitted.
+Folder creation is a deterministic side effect of placement, not a
+decision.
+
+The placement of an artifact is derived as follows:
+
+• ARTIFACT_DOMAIN determines the canonical repository
+• ARTIFACT_FUNCTION determines the path class within the repository
+• ARTIFACT_ID determines the filename
+• ARTIFACT_FORMAT determines the file extension
+
+No other fields may be used for placement derivation.
+
+If a required field for placement is absent, placement is undefined
+and the artifact is non-conforming.
+
+
+────────────────────────────────────────
+OPTIONAL COLLABORATION FIELD
+────────────────────────────────────────
+
+COLLABORATION
+-------------
+
+Records a contributing collaborator and the context of their
+contribution.
+
+This field is OPTIONAL and MAY appear zero or more times.
+
+Value format:
+COLLABORATION: <NAME> FREE-FORM CONTEXT TEXT
+
+Where:
+• <NAME> identifies the collaborating role, chat, or entity
+• All text following the closing `>` is free-form descriptive context
+
+Example:
+COLLABORATION: <UI_BASE_LAYOUT_CHAT> INITIAL GEOMETRY PASS
+COLLABORATION: <ENGINEERING_REVIEW_CHAT> CONSTRAINT VALIDATION
+
+Rules:
+• Each COLLABORATION entry is independent
+• Order carries no semantic meaning
+• The field does NOT imply joint emission, approval, authority, or ownership
+• The field records contribution context only
+
+
+────────────────────────────────────────
+LEGACY COMPATIBILITY
+────────────────────────────────────────
+
+Artifacts created prior to adoption of the explicit header block may omit
+the <DELIVERABLE_HEADER> / </DELIVERABLE_HEADER> delimiters.
+
+For such artifacts:
+• The header is interpreted as the contiguous block of header fields at
+  the beginning of the artifact.
+• Legacy markers such as <DELIVERABLE HEADER>, <END HEADER>, or
+  <DELIVERABLE BODY BEGINS HERE> may be used to aid human interpretation.
+• Absence of explicit header delimiters does not invalidate legacy artifacts.
+
+All newly created deliverable artifacts MUST use the explicit header
+block.
+
+
+────────────────────────────────────────
+INVARIANTS
+────────────────────────────────────────
+
+• All required header fields are mandatory
+• No header field may imply authority, lifecycle, or ordering
+• Header values must remain truthful under reuse and reinterpretation
+• Group delimiter choice carries no semantic meaning beyond separation
+• COLLABORATION entries are descriptive and non-authoritative
+
+
+────────────────────────────────────────
+NON-GOALS
+────────────────────────────────────────
+
+This specification does not define:
+• canonization
+• acceptance
+• versioning
+• rollback
+• workflow
+• enforcement
+
+
+────────────────────────────────────────
+VALUE STYLE GUIDANCE (NON-NORMATIVE)
+────────────────────────────────────────
+
+This section provides recommended conventions for populating deliverable
+header fields. These conventions improve consistency and readability but
+do not impose semantic meaning, authority, or enforcement.
+
+Deviation from these conventions is permitted where clarity requires it.
+
+
+----------------------------------------
+General Principles
+----------------------------------------
+
+• Standardize shape, not meaning
+• Prefer human-readable values over codes
+• Avoid numbers, ordering, or lifecycle terms
+• Avoid words that evaluate, judge, or imply status
+• Treat all values as descriptive facts, not signals
+
+
+----------------------------------------
+Field-Specific Guidance
+----------------------------------------
+
+EMITTER
+• Record the role or chat name exactly as it existed at the time of artifact creation
+• Preserve capitalization, spelling, and wording as originally used
+• Do not retroactively update values to reflect later renaming or restructuring
+• Treat the value as historical provenance, not a canonical directory entry
+
+REQUESTED_BY
+• Record the requesting role or actor exactly as it existed at the time the request was made
+• Preserve original capitalization, spelling, and wording
+• Do not update values to reflect later role, title, or authority changes
+• Treat the value as request provenance, not endorsement or approval
+
+ARTIFACT_FUNCTION
+• Use ALL CAPS with underscore separation
+• Use noun phrases
+• Describe what the artifact is, not what it does
+• Avoid lifecycle, status, or preference language
+
+ARTIFACT_FORMAT
+• Use ALL CAPS with underscore separation
+• Single-word values are acceptable
+• Multi-word values must use underscores
+• Describe the dominant form of expression, not the tool or lifecycle
+
+ARTIFACT_GROUP
+• Use ALL CAPS with underscore separation for group names
+• Separate multiple group values using semicolons (`;`)
+• Treat groups as unordered labels
+• Avoid hierarchy or implied priority
+
+CREATED_IN_CONTEXT
+• Use ALL CAPS
+• Spaces are explicitly allowed
+• Underscores may be used but are not required
+• Prefer short descriptive phrases
+• Describe circumstances or constraints, not outcomes
+• Avoid numbers, phases, versions, or ordering terms
+
+COLLABORATION
+• Use the <NAME> prefix exactly as shown
+• <NAME> should match the collaborator identifier as used elsewhere
+• Context text may be brief or detailed
+• Do not use this field to imply approval, authority, or joint emission
+
+
+────────────────────────────────────────
+CLOSING NOTE
+────────────────────────────────────────
+
+The deliverable header is a fact surface, not a decision surface.
+
+It exists to remain truthful under reuse, reinterpretation,
+disagreement, and time.
