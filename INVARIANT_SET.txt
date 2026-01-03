@@ -1,0 +1,55 @@
+<Specification Region>
+
+This document is the Invariant Set that defines validity for the GOVERNANCE domain.
+
+The Invariant Set consists of this specification and the invariant
+statements defined under it.
+
+Read this document literally.
+
+────────────────────────────────────────
+1. Foundational Conditions
+────────────────────────────────────────
+
+Governance operates within the constraints of the CORE domain.
+
+No governance effect exists outside CORE validity.
+
+────────────────────────────────────────
+2. What a Specification Invariant Is
+────────────────────────────────────────
+
+An invariant is an unconditional declarative constraint
+that must hold for the system to be valid.
+
+Invariants constrain validity.
+
+────────────────────────────────────────
+3. Identifier Discipline
+────────────────────────────────────────
+
+Invariant identifiers are integers.
+
+Each new invariant is assigned the next integer, incremented by one.
+
+────────────────────────────────────────
+4. Change Semantics
+────────────────────────────────────────
+
+The invariant set may change.
+
+Adding an invariant introduces a constraint.
+Removing an invariant removes that constraint.
+
+────────────────────────────────────────
+5. Boundary Rule
+────────────────────────────────────────
+
+All content following the end marker consists solely of
+individually wrapped invariant statements.
+
+<End Specification Region>
+
+<Invariant id="0">
+true
+</Invariant>
