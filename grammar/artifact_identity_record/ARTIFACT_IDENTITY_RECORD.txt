@@ -1,22 +1,14 @@
-<DELIVERABLE_HEADER>
-
-EMITTER: SPEC - Deliverable Header
-REQUESTED_BY: USER
-ARTIFACT_DOMAIN: SPECIFICATION
-ARTIFACT_FUNCTION: GRAMMAR
-ARTIFACT_ID: DELIVERABLE_HEADER
-ARTIFACT_FORMAT: PLAIN_TEXT
-ARTIFACT_GROUP: SPECIFICATION; ARTIFACT_METADATA
-CREATED_IN_CONTEXT: GITHUB ERA GOVERNANCE ARTIFACT ALIGNMENT
-
-</DELIVERABLE_HEADER>
-
-
 ────────────────────────────────────────
 CONTENT
 ────────────────────────────────────────
 
-<DELIVERABLE_HEADER>
+This section defines the complete and only valid contents of the
+structural identity file named IDENTITY.txt.
+
+IDENTITY.txt is a standalone structural file containing the complete
+artifact identity record.
+
+<IDENTITY>
 
 EMITTER:
 REQUESTED_BY:
@@ -30,75 +22,122 @@ CREATED_IN_CONTEXT:
 [OPTIONAL — REPEATABLE]
 COLLABORATION:
 
-</DELIVERABLE_HEADER>
-
+</IDENTITY>
 
 ────────────────────────────────────────
 EXPLANATION
 ────────────────────────────────────────
 
-Deliverable Header Specification — Canonical Definition
+Artifact Identity Record Specification — Canonical Definition
 
 Purpose
 
-This artifact defines the required header structure and fields for
-deliverable artifacts.
+This artifact defines the required identity record structure and fields
+for deliverable artifacts.
 
-The header exists to make provenance, identity, expression, association,
-and situational context explicit, while deliberately refusing to encode
-authority, lifecycle, ordering, evaluation, or temporal semantics.
+The artifact identity record exists to make provenance, identity,
+expression, association, and situational context explicit, while
+deliberately refusing to encode authority, lifecycle, ordering,
+evaluation, or temporal semantics.
 
 Human vs Machine Interpretation
 
-Header field values are chosen by human authors and may be meaningful
+Identity field values are chosen by human authors and may be meaningful
 and legible to them.
 
 The constraints defined in this specification apply to how tooling,
 automation, and orchestration interpret and act upon these values.
 
-Tooling MUST treat all header values as declarative inputs and MUST NOT
+Tooling MUST treat all identity values as declarative inputs and MUST NOT
 infer intent, authority, behavior, or lifecycle semantics beyond what is
 explicitly specified by governing artifacts.
 
+────────────────────────────────────────
+ARTIFACT IDENTITY VS STRUCTURAL CONTAINER
+────────────────────────────────────────
+
+A deliverable artifact consists of exactly one artifact body file.
+
+The artifact body file contains the artifact’s content.
+
+The artifact directory is a structural container that exists to support:
+• deterministic placement
+• artifact identity record association
+• structural discovery
+
+This specification governs the structural container and its associated
+artifact identity record.
+
+It does not redefine artifact identity, which remains vested in the
+artifact itself.
+
+────────────────────────────────────────
+ARTIFACT BODY FILE CARDINALITY
+────────────────────────────────────────
+
+Each deliverable artifact directory contains exactly one artifact body file.
+
+The artifact body file is the sole bearer of artifact identity and content.
+
+The presence of multiple artifact body files within a single artifact
+directory is incompatible with the deliverable artifact model.
+
+This specification assumes the exactly-one artifact body file invariant
+but does not define discovery, validation, or enforcement mechanisms
+for artifact body files.
+
+Governance, invariants, or tooling external to this specification are
+responsible for enforcing this constraint.
 
 ────────────────────────────────────────
 APPLICABILITY
 ────────────────────────────────────────
 
-This specification applies only to artifacts designated as deliverables
-within a delegated execution scope.
+This specification applies only to artifacts designated as deliverables.
 
-It does not replace or override:
-• ledger headers
-• protocol headers
-• governance artifacts
-
-Reuse outside deliverable artifacts requires explicit declaration elsewhere.
-
+It does not replace or override invariant sets.
 
 ────────────────────────────────────────
-HEADER STRUCTURE (NORMATIVE)
+IDENTITY STRUCTURE (NORMATIVE)
 ────────────────────────────────────────
 
-All deliverable artifacts MUST include an explicit header block delimited by:
+The artifact identity record is a standalone structural file.
 
-<DELIVERABLE_HEADER>
-</DELIVERABLE_HEADER>
+Each deliverable artifact directory MUST contain exactly one file named:
 
-All header fields MUST appear within this block.
+IDENTITY.txt
 
-The deliverable body consists of all content following the closing
-</DELIVERABLE_HEADER> tag.
+IDENTITY.txt contains the complete artifact identity record.
 
-No other markers are required to establish the header/body boundary.
+The artifact identity record within IDENTITY.txt MUST be delimited by:
 
+<IDENTITY>
+</IDENTITY>
+
+All required and optional identity fields MUST appear within this block.
 
 ────────────────────────────────────────
-REQUIRED HEADER FIELDS
+IDENTITY DISCOVERY & STRUCTURAL FAILURE
 ────────────────────────────────────────
 
-All deliverable artifacts MUST include all of the following fields.
+Tooling and orchestration MUST locate the artifact identity record by
+resolving IDENTITY.txt within the artifact directory.
 
+Identity discovery is constrained exclusively to IDENTITY.txt.
+
+A deliverable artifact is non-conforming if:
+• IDENTITY.txt is missing
+• more than one IDENTITY.txt exists
+• IDENTITY.txt does not contain exactly one identity record block
+• the identity record block is malformed or ambiguous
+
+No fallback, inference, or recovery behavior is permitted.
+
+────────────────────────────────────────
+REQUIRED IDENTITY FIELDS
+────────────────────────────────────────
+
+The IDENTITY.txt MUST include all of the following fields.
 
 EMITTER
 -------
@@ -130,10 +169,6 @@ ARTIFACT_DOMAIN:
 ARTIFACT_DOMAIN values are opaque labels governed externally.
 
 This field may be referenced by routing rules.
-Omission is permitted only for legacy deliverable artifacts created
-before adoption of this specification; newly created artifacts are
-expected to include this field.
-
 
 ARTIFACT_FUNCTION
 -----------------
@@ -153,7 +188,14 @@ ARTIFACT_FUNCTION:
 ARTIFACT_ID
 -----------
 
-ARTIFACT_ID declares the stable identity of an artifact.
+ARTIFACT_ID declares the stable identity of a deliverable artifact.
+
+A deliverable artifact is a directory-scoped identity unit, not a
+single file.
+
+ARTIFACT_ID identifies the artifact itself and is used to determine:
+• the artifact directory name
+• the artifact body filename within that directory
 
 It is a human-chosen identifier selected for clarity and reference.
 Tooling and orchestration MUST treat the value as opaque and MUST NOT
@@ -170,9 +212,6 @@ ARTIFACT_ID:
 ARTIFACT_ID is the sole source of truth for artifact identity.
 
 This field may be referenced by routing or naming rules.
-Omission is permitted only for legacy deliverable artifacts created
-before adoption of this specification; newly created artifacts are
-expected to include this field.
 
 ARTIFACT_FORMAT
 ---------------
@@ -209,16 +248,17 @@ DETERMINISTIC PLACEMENT GRAMMAR
 ────────────────────────────────────────
 
 This section defines the only valid deterministic mapping from
-deliverable header fields to artifact placement.
+artifact identity record fields to artifact placement.
 
 This grammar is normative and declarative.
 
 Any deviation from this mapping is incorrect by definition, regardless
 of tooling availability or enforcement status.
 
-Placement is a pure, total function of the deliverable header.
-Given a valid header, the repository, path, filename, and extension are
-uniquely determined.
+Placement is a pure, total function of the artifact identity record.
+Given a valid identity record, the repository, path, filename, and
+extension are uniquely determined.
+
 Missing or invalid required fields cause placement to fail; no defaults,
 fallbacks, or judgment are permitted.
 Folder creation is a deterministic side effect of placement, not a
@@ -228,14 +268,14 @@ The placement of an artifact is derived as follows:
 
 • ARTIFACT_DOMAIN determines the canonical repository
 • ARTIFACT_FUNCTION determines the path class within the repository
-• ARTIFACT_ID determines the filename
+• ARTIFACT_ID determines the artifact directory name
+• ARTIFACT_ID also determines the artifact body filename
 • ARTIFACT_FORMAT determines the file extension
 
+The deliverable artifact is the directory as a whole.
+The file within that directory is the artifact body.
+
 No other fields may be used for placement derivation.
-
-If a required field for placement is absent, placement is undefined
-and the artifact is non-conforming.
-
 
 ────────────────────────────────────────
 OPTIONAL COLLABORATION FIELD
@@ -271,27 +311,21 @@ Rules:
 LEGACY COMPATIBILITY
 ────────────────────────────────────────
 
-Artifacts created prior to adoption of the explicit header block may omit
-the <DELIVERABLE_HEADER> / </DELIVERABLE_HEADER> delimiters.
+Artifacts created prior to adoption of the structural IDENTITY.txt model
+may have expressed identity information in embedded or ad hoc forms.
 
-For such artifacts:
-• The header is interpreted as the contiguous block of header fields at
-  the beginning of the artifact.
-• Legacy markers such as <DELIVERABLE HEADER>, <END HEADER>, or
-  <DELIVERABLE BODY BEGINS HERE> may be used to aid human interpretation.
-• Absence of explicit header delimiters does not invalidate legacy artifacts.
+Such artifacts are considered legacy and are outside the normative
+scope of this specification unless explicitly migrated.
 
-All newly created deliverable artifacts MUST use the explicit header
-block.
-
+Legacy identity representations are out of scope for this specification.
 
 ────────────────────────────────────────
 INVARIANTS
 ────────────────────────────────────────
 
-• All required header fields are mandatory
-• No header field may imply authority, lifecycle, or ordering
-• Header values must remain truthful under reuse and reinterpretation
+• All required identity fields are mandatory
+• No identity field may imply authority, lifecycle, or ordering
+• Identity values must remain truthful under reuse and reinterpretation
 • Group delimiter choice carries no semantic meaning beyond separation
 • COLLABORATION entries are descriptive and non-authoritative
 
@@ -313,8 +347,8 @@ This specification does not define:
 VALUE STYLE GUIDANCE (NON-NORMATIVE)
 ────────────────────────────────────────
 
-This section provides recommended conventions for populating deliverable
-header fields. These conventions improve consistency and readability but
+This section provides recommended conventions for populating artifact
+identity record fields. These conventions improve consistency and readability but
 do not impose semantic meaning, authority, or enforcement.
 
 Deviation from these conventions is permitted where clarity requires it.
@@ -384,7 +418,7 @@ COLLABORATION
 CLOSING NOTE
 ────────────────────────────────────────
 
-The deliverable header is a fact surface, not a decision surface.
+The artifact identity record is a fact surface, not a decision surface.
 
 It exists to remain truthful under reuse, reinterpretation,
 disagreement, and time.
