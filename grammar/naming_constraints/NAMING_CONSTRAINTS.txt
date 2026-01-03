@@ -1,0 +1,84 @@
+────────────────────────────────────────
+NAMING_CONSTRAINTS
+────────────────────────────────────────
+
+────────────────────────────────────────
+SCOPE
+────────────────────────────────────────
+
+This specification defines the complete and exclusive grammar for
+admissible file and directory names within governed repositories.
+
+Any name not conforming to this grammar is invalid.
+
+────────────────────────────────────────
+SEMANTIC CONSTRAINTS
+────────────────────────────────────────
+
+Names MUST NOT encode semantics belonging to any of the following
+disallowed classes:
+
+• Lifecycle semantics
+• Authority semantics
+• Ordering or versioning semantics
+• Evaluative semantics
+
+No other semantic restrictions apply.
+
+This grammar governs form only.
+
+────────────────────────────────────────
+CHARACTER SET & SHAPE
+────────────────────────────────────────
+
+Names MUST conform to all of the following constraints:
+
+Character Set:
+• ASCII uppercase letters A–Z
+• Underscore character (`_`)
+
+Casing:
+• All alphabetic characters MUST be uppercase
+
+Length:
+• Minimum length: 3 characters
+• Maximum length: 64 characters
+• Underscores are excluded from length calculation
+
+No other characters are permitted.
+
+────────────────────────────────────────
+FILE EXTENSIONS
+────────────────────────────────────────
+
+File extensions are not part of the governed name.
+
+────────────────────────────────────────
+INTERPRETATION
+────────────────────────────────────────
+
+Names are treated as opaque identifiers.
+
+Tooling, automation, and LLMs MUST NOT infer meaning, intent, authority,
+lifecycle, correctness, or provenance from names.
+
+Human interpretation carries no operational effect.
+
+────────────────────────────────────────
+VALIDITY & FAILURE
+────────────────────────────────────────
+
+Validity is mechanically decidable by this grammar alone.
+
+Any name that violates this specification is invalid.
+
+Upon invalidity:
+• Execution MUST STOP
+• Failure MUST be explicit
+• No fallback or recovery is permitted
+
+There is no partial validity.
+
+────────────────────────────────────────
+END
+────────────────────────────────────────
